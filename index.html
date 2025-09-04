@@ -1,0 +1,604 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <style>
+    :root {
+      color-scheme: light dark;
+    }
+
+    body {
+      margin: 0;
+      min-height: 100svh;
+      display: grid;
+      place-items: center;
+      background: Canvas;
+      font-family: system-ui, -apple-system, Segoe UI, Roboto, Ubuntu, Cantarell, "Helvetica Neue", Arial, "Noto Sans", "Apple Color Emoji", "Segoe UI Emoji";
+    }
+
+    .row {
+      display: grid;
+      grid-template-columns: 1fr 1fr 1fr 1fr 1fr;
+      grid-template-rows: auto;
+      gap: 3px;
+    }
+
+    .container {
+      display: grid;
+      grid-template-rows: 1fr 1fr 1fr 1fr 1fr;
+      grid-template-columns: auto;
+      gap: 3px;
+    }
+
+    .scene {
+      perspective: 900px;
+      perspective-origin: 50% 40%;
+    }
+
+    .square {
+      display: flex;
+      flex-direction: row;
+      justify-items: center;
+      align-items: center;
+      justify-content: space-around;
+      /* font-family: "Arial"; */
+      font-weight: normal;
+      color: white;
+      font-size: 4rem;
+      width: 70px;
+      height: 70px;
+      border-radius: 2px;
+      box-shadow: 0 12px 30px rgba(0, 0, 0, .18), inset 0 1px 0 rgba(255, 255, 255, .08);
+      transform-style: preserve-3d;
+      will-change: transform;
+      background-color: #474747;
+      text-transform: uppercase;
+    }
+
+    .animation1 {
+      animation: flip1 0.6s forwards;
+    }
+
+    .animation2 {
+      animation: flip2 0.6s forwards;
+      animation-delay: 0.3s;
+    }
+
+    .animation3 {
+      animation: flip2 0.6s forwards;
+      animation-delay: 0.6s;
+    }
+
+    .animation4 {
+      animation: flip2 0.6s forwards;
+      animation-delay: 0.9s;
+    }
+
+    .animation5 {
+      animation: flip2 0.6s forwards;
+      animation-delay: 1.2s;
+    }
+
+    .green-panel {
+      color: white;
+      background-color: #316911;
+    }
+
+    .amber-panel {
+      color: white;
+      background-color: rgb(199, 142, 45);
+    }
+
+    .orange-panel {
+      color: wheat;
+      background-color: orange;
+    }
+
+    .button-panel {
+      display: flex;
+      flex-direction: row;
+      justify-content: center;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .button {
+      margin-top: 20px;
+      padding: 10px 35px;
+      color: aliceblue;
+      text-align: center;
+      font-weight: normal;
+      font-size: 1.2em;
+      border-radius: 10px;
+      cursor: pointer;
+      box-shadow: 1px 3px 15px #474747;
+      border: none;
+    }
+
+    .submit {
+      background-color: #474747;
+    }
+
+    .submit:active {
+      font-size: 1.18em;
+    }
+
+    .delete {
+      background-color: #a80e0e;
+    }
+
+    .button:active {
+      font-size: 1.18em;
+    }
+
+    .button:disabled {
+      background-color: rgb(207, 207, 207);
+      cursor: not-allowed;
+    }
+
+    .circle {
+      margin-top: 20px;
+      padding: 20px 11px;
+      color: aliceblue;
+      text-align: center;
+      font-weight: normal;
+      font-size: 0.5em;
+      border-radius: 50px;
+      cursor: pointer;
+      box-shadow: 1px 3px 15px #474747;
+      border: none;
+      background-color: #474747;
+    }
+
+    @keyframes flip1 {
+      0% {
+        transform: rotateX(180deg);
+      }
+    }
+
+    @keyframes flip2 {
+      0% {
+        transform: rotateX(180deg);
+      }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      .square {
+        animation: none;
+      }
+    }
+  </style>
+  <title>Wordle Clone</title>
+</head>
+
+<body>
+  <div class="scene">
+    <div class="container">
+      <span class="row" id="row-1">
+        <div class="sq1 square square1" aria-label="Flipping square1" id="square-1"></div>
+        <div class="sq2 square square2" aria-label="Flipping square2" id="square-2"></div>
+        <div class="sq3 square square3" aria-label="Flipping square3" id="square-3"></div>
+        <div class="sq4 square square4" aria-label="Flipping square4" id="square-4"></div>
+        <div class="sq5 square square5" aria-label="Flipping square5" id="square-5"></div>
+      </span>
+      <span class="row" id="row-2">
+
+        <div class="sq6 square" aria-label="Flipping square6" id="square-6"></div>
+        <div class="sq7 square" aria-label="Flipping square7" id="square-7"></div>
+        <div class="sq8 square" aria-label="Flipping square8" id="square-8"></div>
+        <div class="sq9 square" aria-label="Flipping square9" id="square-9"></div>
+        <div class="sq10 square" aria-label="Flipping square10" id="square-10"></div>
+      </span>
+      <span class="row" id="row-3">
+        <div class="sq11 square" aria-label="Flipping square11" id="square-11"></div>
+        <div class="sq12 square" aria-label="Flipping square12" id="square-12"></div>
+        <div class="sq13 square" aria-label="Flipping square13" id="square-13"></div>
+        <div class="sq14 square" aria-label="Flipping square14" id="square-14"></div>
+        <div class="sq15 square" aria-label="Flipping square15" id="square-15"></div>
+      </span>
+      <span class="row" id="row-4">
+        <div class="sq16 square" aria-label="Flipping square16" id="square-16"></div>
+        <div class="sq17 square" aria-label="Flipping square17" id="square-17"></div>
+        <div class="sq18 square" aria-label="Flipping square18" id="square-18"></div>
+        <div class="sq19 square" aria-label="Flipping square19" id="square-19"></div>
+        <div class="sq20 square" aria-label="Flipping square20" id="square-20"></div>
+      </span>
+      <span class="row" id="row-5">
+        <div class="sq21 square" aria-label="Flipping square21" id="square-21"></div>
+        <div class="sq22 square" aria-label="Flipping square22" id="square-22"></div>
+        <div class="sq23 square" aria-label="Flipping square23" id="square-23"></div>
+        <div class="sq24 square" aria-label="Flipping square24" id="square-24"></div>
+        <div class="sq25 square" aria-label="Flipping square25" id="square-25"></div>
+      </span>
+      <span class="row" id="row-6">
+        <div class="sq26 square" aria-label="Flipping square26" id="square-26"></div>
+        <div class="sq27 square" aria-label="Flipping square27" id="square-27"></div>
+        <div class="sq28 square" aria-label="Flipping square28" id="square-28"></div>
+        <div class="sq29 square" aria-label="Flipping square29" id="square-29"></div>
+        <div class="sq30 square" aria-label="Flipping square30" id="square-30"></div>
+      </span>
+    </div>
+    <div class="button-panel">
+      <input id="submit-button" class="button submit" type="submit" onclick="spinRow()" value="Enter" disabled />
+      <button class="circle" onclick="resetGame()">RESET</button>
+      <input id="delete-button" class="button delete" type="submit" onclick="deleteLastLetter()" value="Delete" />
+    </div>
+
+    <!-- Tries Counter and Stats Table -->
+    <div id="tries-container" style="margin-top: 40px; text-align: center;">
+      <div id="tries-display" style="font-size: 2.5rem; font-weight: bold; margin-bottom: 10px; color: #316911;">
+        Tries: <span id="tries-count">1</span> / 6
+      </div>
+      <div style="display: flex; justify-content: center;">
+        <table style="background: none; border-collapse: collapse; font-size: 1.3rem; color: #474747;">
+          <tr>
+            <td style="padding: 10px 30px;">Tries</td>
+            <td style="padding: 10px 30px;">Losses</td>
+            <td style="padding: 10px 30px;">Wins</td>
+          </tr>
+          <tr style="font-size: 1.7rem; font-weight: bold;">
+            <td style="padding: 10px 30px;" id="stat-tries">0</td>
+            <td style="padding: 10px 30px;" id="stat-losses">0</td>
+            <td style="padding: 10px 30px;" id="stat-wins">0</td>
+          </tr>
+        </table>
+      </div>
+    </div>
+  </div>
+
+
+</body>
+<script>
+  // Line 1 Squares
+  const squareOne = document.getElementById('square-1');
+  const squareTwo = document.getElementById('square-2');
+  const squareThree = document.getElementById('square-3');
+  const squareFour = document.getElementById('square-4');
+  const squareFive = document.getElementById('square-5');
+
+  // Line 2 Squares
+  const squareSix = document.getElementById('square-6');
+  const squareSeven = document.getElementById('square-7');
+  const squareEight = document.getElementById('square-8');
+  const squareNine = document.getElementById('square-9');
+  const squareTen = document.getElementById('square-10');
+
+  // Line 3 Squares
+  const squareEleven = document.getElementById('square-11');
+  const squareTwelve = document.getElementById('square-12');
+  const squareThirteen = document.getElementById('square-13');
+  const squareFourteen = document.getElementById('square-14');
+  const squareFifteen = document.getElementById('square-15');
+
+  // Line 4 Squares
+  const squareSixteen = document.getElementById('square-16');
+  const squareSeventeen = document.getElementById('square-17');
+  const squareEighteen = document.getElementById('square-18');
+  const squareNineteen = document.getElementById('square-19');
+  const squareTwenty = document.getElementById('square-20');
+
+  // Line 5 Squares
+  const squareTwentyOne = document.getElementById('square-21');
+  const squareTwentyTwo = document.getElementById('square-22');
+  const squareTwentyThree = document.getElementById('square-23');
+  const squareTwentyFour = document.getElementById('square-24');
+  const squareTwentyFive = document.getElementById('square-25');
+
+  // Line 6 Squares
+  const squareTwentySix = document.getElementById('square-26');
+  const squareTwentySeven = document.getElementById('square-27');
+  const squareTwentyEight = document.getElementById('square-28');
+  const squareTwentyNine = document.getElementById('square-29');
+  const squareThirty = document.getElementById('square-30');
+
+  // Buttons
+  const submitButton = document.getElementById('submit-button');
+  const deleteButton = document.getElementById('delete-button');
+
+  // Dictionary
+  const dictionary = [
+    'APPLE', 'BRAIN', 'CHAIR', 'DREAM', 'EARTH', 'FAITH', 'GRAPE', 'HOUSE', 'INDEX', 'JUICE', 'KNIFE', 'LEMON', 'MOUSE', 'NURSE', 'OCEAN', 'PLANT', 'QUEEN', 'ROBOT', 'SHEEP', 'TABLE', 'UNION', 'VIRUS', 'WATER', 'XENON', 'YOUTH', 'ZEBRA', 'ALARM', 'BREAD', 'CLOUD', 'DRIVE', 'ELDER', 'FROST', 'GLASS', 'HEART', 'IMAGE', 'JELLY', 'KNOCK', 'LIGHT', 'MANGO', 'NIGHT', 'OPERA', 'PEACH', 'QUILT', 'RIVER', 'SHINE', 'TIGER', 'UNITY', 'VOWEL', 'WOMAN', 'YIELD', 'ZONAL', 'ANGEL', 'BLEND', 'CRANE', 'DELTA', 'ENEMY', 'FLAME', 'GIANT', 'HONEY', 'ISSUE', 'JOKER', 'KNEEL', 'LUNCH', 'MAGIC', 'NOVEL', 'ORDER', 'PIZZA', 'QUICK', 'RANGE', 'SUGAR', 'TREND', 'UPPER', 'VOICE', 'WORLD', 'YEAST', 'ZESTY', 'ADULT', 'BRAVE', 'COVER', 'DEMON', 'EAGER', 'FANCY', 'GHOST', 'HUMAN', 'INPUT', 'JUDGE', 'KARMA', 'LEAFY', 'MIRTH', 'NOBLE', 'OFFER', 'PRIZE', 'QUIET', 'REACH', 'SMILE', 'TRUST', 'URBAN', 'VISIT', 'WORST', 'YACHT', 'ZONAL'
+  ];
+
+  // Pick a random target word from the dictionary
+  const targetWord = dictionary[Math.floor(Math.random() * dictionary.length)];
+  console.log("Target Word:", targetWord); // For debugging purposes
+
+  document.addEventListener('keydown', (event) => {
+    const key = event.key.toUpperCase();
+    if (key === 'ENTER') {
+      spinRow();
+    } else if (key === 'BACKSPACE') {
+      deleteLastLetter();
+    } else if (/^[A-Z]$/.test(key)) {
+      addLetterToCurrentRow(key);
+    }
+  });
+
+  // Flip Card Function
+  function flipCard(chosenSquare, chosenColor, chosenAnimation) {
+    chosenSquare.classList.add(chosenAnimation);
+    chosenSquare.addEventListener('animationstart', () => {
+      setTimeout(() => { chosenSquare.classList.add(`${chosenColor}-panel`); }, 300);
+    })
+  }
+
+  let rowIndex = 1;
+  var square1 = document.getElementsByClassName('square1');
+  var square2 = document.getElementsByClassName('square2');
+  var square3 = document.getElementsByClassName('square3');
+  var square4 = document.getElementsByClassName('square4');
+  var square5 = document.getElementsByClassName('square5');
+
+  // Function to spin the current row and prepare the next row
+  function spinRow() {
+    // Get a reference to the previous row before incrementing rowIndex
+    const oldRow = document.getElementById(`row-${rowIndex}`);
+
+    // Build the guess from the current row
+    let guess = '';
+    for (const child of oldRow.children) {
+      guess += child.textContent.toUpperCase();
+    }
+
+    // Check if guess is a valid 5-letter word in the dictionary
+    if (guess.length !== 5 || !dictionary.includes(guess)) {
+      // alertMessage("Word not in dictionary!");
+      // return;
+      console.log("Word not in dictionary!", guess)
+    }
+
+    // Evaluate the guess to get flipMode array
+    const flipMode = evaluateGuess(guess);
+
+    // Define color mapping for flipMode
+    const colorMap = {
+      1: 'green',
+      2: 'amber',
+      0: 'grey'
+    };
+
+    // Flip cards with correct color based on flipMode
+    for (let i = 0; i < oldRow.children.length; i++) {
+      const child = oldRow.children[i];
+      const indexColor = colorMap[flipMode[i]];
+      child.classList.remove('square' + (i + 1));
+      flipCard(child, indexColor, 'animation' + (i + 1));
+    }
+
+    // Check win/lose condition
+    let win = false;
+    if (guess === targetWord) {
+      wins++;
+      win = true;
+      alertMessage("Congratulations! You've guessed the word!");
+      disableButtons();
+    } else if (rowIndex === 6) {
+      losses++;
+      alertMessage(`Game Over! The correct word was: ${targetWord}`);
+      disableButtons();
+    }
+
+    tries++;
+    rowIndex++;
+    if (rowIndex > 6) {
+      rowIndex = 1;
+    }
+    updateStatsDisplay();
+
+    // Prepare next row
+    const newRow = document.getElementById(`row-${rowIndex}`);
+    let newCardIndex = 1;
+    for (const child of newRow.children) {
+      let className = 'square' + newCardIndex
+      child.classList.add(className);
+      newCardIndex++;
+    }
+  }
+
+  function deleteLastLetter() {
+    console.log("Delete button clicked or backspace pressed");
+    const currentRow = document.getElementById(`row-${rowIndex}`);
+    let filledCount = 0;
+    // Find the last non-empty square and clear it
+    for (let i = currentRow.children.length - 1; i >= 0; i--) {
+      if (currentRow.children[i].textContent.trim() !== '') {
+        currentRow.children[i].textContent = '';
+        break;
+      }
+    }
+    // Check if all squares are filled after deleting
+    for (const child of currentRow.children) {
+      if (child.textContent !== '') filledCount++;
+    }
+    submitButton.disabled = filledCount !== 5;
+  }
+
+
+  function resetGame() {
+    console.log("Resetting the game...");
+    // Clear all squares
+    const allSquares = document.querySelectorAll('.square');
+    allSquares.forEach(square => {
+      square.textContent = '';
+      square.className = 'square'; // Reset classes
+    });
+    rowIndex = 1;
+    updateStatsDisplay();
+    // Pick a new target word
+    const newTargetWord = dictionary[Math.floor(Math.random() * dictionary.length)];
+    console.log("New Target Word:", newTargetWord); // For debugging purposes
+  }
+
+  function disableButtons() {
+    submitButton.disabled = true;
+    deleteButton.disabled = true;
+  }
+
+  function enableButtons() {
+    submitButton.disabled = false;
+    deleteButton.disabled = false;
+  }
+
+
+  // Add letter to the current row
+  function addLetterToCurrentRow(letter) {
+    const currentRow = document.getElementById(`row-${rowIndex}`);
+    let filledCount = 0;
+    for (const child of currentRow.children) {
+      if (child.textContent === '') {
+        child.textContent = letter;
+        break;
+      }
+    }
+    // Check if all squares are filled after adding
+    for (const child of currentRow.children) {
+      if (child.textContent !== '') filledCount++;
+    }
+    submitButton.disabled = filledCount !== 5;
+  }
+
+  // Alert message function
+  function alertMessage(message) {
+    alert(message);
+  }
+
+  // Check win condition after each guess
+  function checkWinCondition() {
+    const currentRow = document.getElementById(`row-${rowIndex}`);
+    let guess = '';
+    for (const child of currentRow.children) {
+      guess += child.textContent;
+    }
+    if (guess.length === 5) {
+      disableButtons();
+      if (guess === targetWord) {
+        alertMessage("Congratulations! You've guessed the word!");
+        disableButtons();
+      } else if (rowIndex === 6) {
+        alertMessage(`Game Over! The correct word was: ${targetWord}`);
+        disableButtons();
+      }
+    }
+  }
+
+  // Compare row guess with target word and add color number to flipMode array
+  function evaluateGuess(guess) {
+    const flipMode = [];
+    const targetLetters = targetWord.split('');
+    const guessLetters = guess.split('');
+    const letterCount = {};
+    targetLetters.forEach(letter => {
+      letterCount[letter] = (letterCount[letter] || 0) + 1;
+    });
+    // First pass: Check for correct letters in correct positions
+    for (let i = 0; i < 5; i++) {
+      if (guessLetters[i] === targetLetters[i]) {
+        flipMode[i] = 1; // Green
+        letterCount[guessLetters[i]]--;
+      }
+    }
+    // Second pass: Check for correct letters in wrong positions
+    for (let i = 0; i < 5; i++) {
+      if (!flipMode[i]) { // Only check letters not already marked green
+        if (letterCount[guessLetters[i]] > 0) {
+          flipMode[i] = 2; // Amber
+          letterCount[guessLetters[i]]--;
+        } else {
+          flipMode[i] = 0; // Grey
+        }
+      }
+    }
+    return flipMode;
+  }
+
+  // Stats variables
+  let tries = 0;
+  let wins = 0;
+  let losses = 0;
+
+  // Update stats display
+  function updateStatsDisplay() {
+    document.getElementById('stat-tries').textContent = tries;
+    document.getElementById('stat-wins').textContent = wins;
+    document.getElementById('stat-losses').textContent = losses;
+    document.getElementById('tries-count').textContent = rowIndex;
+  }
+
+  // Update tries display on every guess
+  function spinRow() {
+    const oldRow = document.getElementById(`row-${rowIndex}`);
+    let guess = '';
+    for (const child of oldRow.children) {
+      guess += child.textContent.toUpperCase();
+    }
+
+    if (guess.length !== 5 || !dictionary.includes(guess)) {
+      // alertMessage("Word not in dictionary!");
+      // return;
+      console.log("Word not in dictionary!", guess)
+    }
+
+    const flipMode = evaluateGuess(guess);
+    const colorMap = { 1: 'green', 2: 'amber', 0: 'grey' };
+
+    for (let i = 0; i < oldRow.children.length; i++) {
+      const child = oldRow.children[i];
+      const indexColor = colorMap[flipMode[i]];
+      child.classList.remove('square' + (i + 1));
+      flipCard(child, indexColor, 'animation' + (i + 1));
+    }
+
+    // Check win/lose condition
+    let win = false;
+    if (guess === targetWord) {
+      wins++;
+      win = true;
+      alertMessage("Congratulations! You've guessed the word!");
+      disableButtons();
+    } else if (rowIndex === 6) {
+      losses++;
+      alertMessage(`Game Over! The correct word was: ${targetWord}`);
+      disableButtons();
+    }
+
+    tries++;
+    rowIndex++;
+    if (rowIndex > 6) {
+      rowIndex = 1;
+    }
+    updateStatsDisplay();
+
+    // Prepare next row
+    const newRow = document.getElementById(`row-${rowIndex}`);
+    let newCardIndex = 1;
+    for (const child of newRow.children) {
+      let className = 'square' + newCardIndex
+      child.classList.add(className);
+      newCardIndex++;
+    }
+  }
+
+  // Update stats on reset
+  function resetGame() {
+    console.log("Resetting the game...");
+    // Clear all squares
+    const allSquares = document.querySelectorAll('.square');
+    allSquares.forEach(square => {
+      square.textContent = '';
+      square.className = 'square'; // Reset classes
+    });
+    rowIndex = 1;
+    updateStatsDisplay();
+    // Pick a new target word
+    const newTargetWord = dictionary[Math.floor(Math.random() * dictionary.length)];
+    console.log("New Target Word:", newTargetWord); // For debugging purposes
+  }
+
+  // Update stats on page load
+  updateStatsDisplay();
+</script>
+
+</html>
