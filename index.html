@@ -22,7 +22,7 @@
       display: grid;
       grid-template-columns: repeat(5, 1fr);
       grid-template-rows: auto;
-      /* gap: 3px; */
+      gap: 3px;
     }
 
     .container {
@@ -47,7 +47,7 @@
       font-weight: normal;
       color: white;
       font-size: 4rem;
-      width: 88px;
+      width: 80px;
       height: 80px;
       border-radius: 2px;
       box-shadow: 0 12px 30px rgba(0, 0, 0, .18), inset 0 1px 0 rgba(255, 255, 255, .08);
@@ -299,7 +299,7 @@
 </head>
 
 <body>
-  <div class="scene">
+  <div class="scene" onclick="focusInput()">
     <div class="alert-box id=" alert-box" onclick="this.style.display='none', resetGame()">
       <div class="alert-heading" id="alert-heading">
         &nbsp;
@@ -353,7 +353,7 @@
         <div class="sq30 square" aria-label="Flipping square30" id="square-30"></div>
       </span>
     </div>
-    <div class="button-panel" style="display: none;">
+    <div class="button-panel">
       <input id="submit-button" class="button submit" type="submit" onclick="spinRow()" value="Enter" disabled />
       <button class="circle" onclick="resetGame()">RESET</button>
       <input id="delete-button" class="button delete" type="submit" onclick="deleteLastLetter()" value="Delete" />
@@ -381,8 +381,8 @@
       </div>
     </div>
     <!-- Virtual Keyboard -->
-    <div class="keyboard-container" id="virtual-keyboard">
-      <div class="keyboard-row">
+    <div class="keyboard-container" id="virtual-keyboard" style="display: none;">
+      <div class=" keyboard-row">
         <button class="key-btn">Q</button>
         <button class="key-btn">W</button>
         <button class="key-btn">E</button>
