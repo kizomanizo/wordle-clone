@@ -207,7 +207,7 @@
 </head>
 
 <body>
-  <div class="scene">
+  <div class="scene" onclick="focusInput()">
     <div class="alert-box id=" alert-box" onclick="this.style.display='none', resetGame()">
       <div class="alert-heading" id="alert-heading">
         &nbsp;
@@ -267,7 +267,7 @@
       <input id="delete-button" class="button delete" type="submit" onclick="deleteLastLetter()" value="Delete" />
     </div>
     <!-- Hidden input for calling focus and activating keyboard on mobiles -->
-    <input type="text" id="dummyInput" style="opacity:0; position:absolute; left:-9999px;" />
+    <input type="text" id="dummyInput" style="opacity:0; position:absolute; left:-200px;" />
     <!-- Tries Counter and Stats Table -->
     <div id="tries-container" style="margin-top: 40px; text-align: center;">
       <div id="tries-display" style="font-size: 2.5rem; font-weight: bold; margin-bottom: 10px; color: #316911;">
@@ -483,6 +483,9 @@
     deleteButton.disabled = false;
   }
 
+  function focusInput() {
+    document.getElementById("dummyInput").focus();
+  }
 
   // Add letter to the current row
   function addLetterToCurrentRow(letter) {
