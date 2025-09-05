@@ -345,10 +345,11 @@
 
   const alertHeading = document.getElementById('alert-heading');
   const alertMessageBox = document.getElementById('alert-message');
+  const alertBox = document.getElementById('alert-box');
 
-  // Pick a random target word from the dictionary
-  const targetWord = dictionary[Math.floor(Math.random() * dictionary.length)];
-  console.log("Target Word:", targetWord); // For debugging purposes
+  // Pick a random (disposable) target word from the dictionary
+  let targetWord = dictionary[Math.floor(Math.random() * dictionary.length)];
+  console.log("Target Word:", targetWord);
 
   document.addEventListener('keydown', (event) => {
     const key = event.key.toUpperCase();
@@ -461,10 +462,12 @@
       square.className = 'square'; // Reset classes
     });
     rowIndex = 1;
+    alertBox.style.display = 'none';
     updateStatsDisplay();
     // Pick a new target word
     const newTargetWord = dictionary[Math.floor(Math.random() * dictionary.length)];
-    console.log("New Target Word:", newTargetWord); // For debugging purposes
+    targetWord = newTargetWord;
+    console.log("New Target Word:", newTargetWord);
   }
 
   function disableButtons() {
@@ -637,6 +640,7 @@
     updateStatsDisplay();
     // Pick a new target word
     const newTargetWord = dictionary[Math.floor(Math.random() * dictionary.length)];
+    targetWord = newTargetWord;
     console.log("New Target Word:", newTargetWord); // For debugging purposes
   }
 
