@@ -152,6 +152,39 @@
       background-color: #474747;
     }
 
+    .alert-box {
+      position: fixed;
+      top: 45%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      height: auto;
+      min-width: 300px;
+      max-width: 90vw;
+      background-color: white;
+      font-size: 1.4rem;
+      text-align: center;
+      padding: 24px 18px;
+      color: #ffffff;
+      z-index: 9999;
+      border-radius: 16px;
+      box-shadow: 2px 2px 12px rgb(252, 255, 178);
+      display: none;
+      cursor: pointer;
+    }
+
+    .alert-heading {
+      font-weight: bold;
+      font-size: 1.6rem;
+      margin-bottom: 12px;
+      color: #316911;
+    }
+
+    .alert-message {
+      font-weight: normal;
+      font-size: 1.2rem;
+      color: #474747;
+    }
+
     @keyframes flip1 {
       0% {
         transform: rotateX(180deg);
@@ -175,6 +208,14 @@
 
 <body>
   <div class="scene">
+    <div class="alert-box id=" alert-box" onclick="this.style.display='none', resetGame()">
+      <div class="alert-heading" id="alert-heading">
+        &nbsp;
+      </div>
+      <div class="alert-message" id="alert-message">
+        &nbsp;
+      </div>
+    </div>
     <div class="container">
       <span class="row" id="row-1">
         <div class="sq1 square square1" aria-label="Flipping square1" id="square-1"></div>
@@ -302,6 +343,9 @@
     'APPLE', 'BRAIN', 'CHAIR', 'DREAM', 'EARTH', 'FAITH', 'GRAPE', 'HOUSE', 'INDEX', 'JUICE', 'KNIFE', 'LEMON', 'MOUSE', 'NURSE', 'OCEAN', 'PLANT', 'QUEEN', 'ROBOT', 'SHEEP', 'TABLE', 'UNION', 'VIRUS', 'WATER', 'XENON', 'YOUTH', 'ZEBRA', 'ALARM', 'BREAD', 'CLOUD', 'DRIVE', 'ELDER', 'FROST', 'GLASS', 'HEART', 'IMAGE', 'JELLY', 'KNOCK', 'LIGHT', 'MANGO', 'NIGHT', 'OPERA', 'PEACH', 'QUILT', 'RIVER', 'SHINE', 'TIGER', 'UNITY', 'VOWEL', 'WOMAN', 'YIELD', 'ZONAL', 'ANGEL', 'BLEND', 'CRANE', 'DELTA', 'ENEMY', 'FLAME', 'GIANT', 'HONEY', 'ISSUE', 'JOKER', 'KNEEL', 'LUNCH', 'MAGIC', 'NOVEL', 'ORDER', 'PIZZA', 'QUICK', 'RANGE', 'SUGAR', 'TREND', 'UPPER', 'VOICE', 'WORLD', 'YEAST', 'ZESTY', 'ADULT', 'BRAVE', 'COVER', 'DEMON', 'EAGER', 'FANCY', 'GHOST', 'HUMAN', 'INPUT', 'JUDGE', 'KARMA', 'LEAFY', 'MIRTH', 'NOBLE', 'OFFER', 'PRIZE', 'QUIET', 'REACH', 'SMILE', 'TRUST', 'URBAN', 'VISIT', 'WORST', 'YACHT', 'ZONAL'
   ];
 
+  const alertHeading = document.getElementById('alert-heading');
+  const alertMessageBox = document.getElementById('alert-message');
+
   // Pick a random target word from the dictionary
   const targetWord = dictionary[Math.floor(Math.random() * dictionary.length)];
   console.log("Target Word:", targetWord); // For debugging purposes
@@ -334,31 +378,14 @@
 
   // Function to spin the current row and prepare the next row
   function spinRow() {
-    // Get a reference to the previous row before incrementing rowIndex
     const oldRow = document.getElementById(`row-${rowIndex}`);
-
-    // Build the guess from the current row
     let guess = '';
     for (const child of oldRow.children) {
       guess += child.textContent.toUpperCase();
     }
 
-    // Check if guess is a valid 5-letter word in the dictionary
-    if (guess.length !== 5 || !dictionary.includes(guess)) {
-      // alertMessage("Word not in dictionary!");
-      // return;
-      console.log("Word not in dictionary!", guess)
-    }
-
-    // Evaluate the guess to get flipMode array
     const flipMode = evaluateGuess(guess);
-
-    // Define color mapping for flipMode
-    const colorMap = {
-      1: 'green',
-      2: 'amber',
-      0: 'grey'
-    };
+    const colorMap = { 1: 'green', 2: 'amber', 0: 'grey' };
 
     // Flip cards with correct color based on flipMode
     for (let i = 0; i < oldRow.children.length; i++) {
@@ -368,18 +395,9 @@
       flipCard(child, indexColor, 'animation' + (i + 1));
     }
 
-    // Check win/lose condition
-    let win = false;
-    if (guess === targetWord) {
-      wins++;
-      win = true;
-      alertMessage("Congratulations! You've guessed the word!");
-      disableButtons();
-    } else if (rowIndex === 6) {
-      losses++;
-      alertMessage(`Game Over! The correct word was: ${targetWord}`);
-      disableButtons();
-    }
+    // Now check win/lose condition AFTER flipping
+    let isWin = guess === targetWord;
+    let isLose = rowIndex === 6 && !isWin;
 
     tries++;
     rowIndex++;
@@ -395,6 +413,23 @@
       let className = 'square' + newCardIndex
       child.classList.add(className);
       newCardIndex++;
+    }
+
+    // Delay alert until after flip animations
+    if (isWin) {
+      wins++;
+      setTimeout(() => {
+        alertHeading.textContent = "Congratulations!";
+        alertMessage.textContent = "You've guessed the word!";
+        document.querySelector('.alert-box').style.display = 'block';
+        disableButtons();
+      }, 1600); // 1.6s ni sawa na urefu wa muda wa flip ya mwisho
+    } else if (isLose) {
+      losses++;
+      setTimeout(() => {
+        alertMessage("Game Over!", `The correct word was: ${targetWord}`);
+        disableButtons();
+      }, 1600);
     }
   }
 
@@ -461,8 +496,11 @@
   }
 
   // Alert message function
-  function alertMessage(message) {
-    alert(message);
+  function alertMessage(heading, message) {
+    // alert(message);
+    alertHeading.textContent = heading || "Alert";
+    alertMessageBox.textContent = message || "You've got message!";
+    document.querySelector('.alert-box').style.display = 'block';
   }
 
   // Check win condition after each guess
@@ -475,10 +513,10 @@
     if (guess.length === 5) {
       disableButtons();
       if (guess === targetWord) {
-        alertMessage("Congratulations! You've guessed the word!");
+        alertMessage("Congratulations!", "You've guessed the word!");
         disableButtons();
       } else if (rowIndex === 6) {
-        alertMessage(`Game Over! The correct word was: ${targetWord}`);
+        alertMessage("Game Over!", `The correct word was: ${targetWord}`);
         disableButtons();
       }
     }
@@ -536,14 +574,13 @@
     }
 
     if (guess.length !== 5 || !dictionary.includes(guess)) {
-      // alertMessage("Word not in dictionary!");
-      // return;
       console.log("Word not in dictionary!", guess)
     }
 
     const flipMode = evaluateGuess(guess);
     const colorMap = { 1: 'green', 2: 'amber', 0: 'grey' };
 
+    // Flip cards with correct color based on flipMode
     for (let i = 0; i < oldRow.children.length; i++) {
       const child = oldRow.children[i];
       const indexColor = colorMap[flipMode[i]];
@@ -551,18 +588,9 @@
       flipCard(child, indexColor, 'animation' + (i + 1));
     }
 
-    // Check win/lose condition
-    let win = false;
-    if (guess === targetWord) {
-      wins++;
-      win = true;
-      alertMessage("Congratulations! You've guessed the word!");
-      disableButtons();
-    } else if (rowIndex === 6) {
-      losses++;
-      alertMessage(`Game Over! The correct word was: ${targetWord}`);
-      disableButtons();
-    }
+    // Now check win/lose condition AFTER flipping
+    let isWin = guess === targetWord;
+    let isLose = rowIndex === 6 && !isWin;
 
     tries++;
     rowIndex++;
@@ -578,6 +606,21 @@
       let className = 'square' + newCardIndex
       child.classList.add(className);
       newCardIndex++;
+    }
+
+    // Delay alert until after flip animations
+    if (isWin) {
+      wins++;
+      setTimeout(() => {
+        alertMessage("Congratulations!", "You've guessed the word!");
+        disableButtons();
+      }, 1600); // 1.6s matches last flip animation
+    } else if (isLose) {
+      losses++;
+      setTimeout(() => {
+        alertMessage("Game Over!", `The correct word was: ${targetWord}`);
+        disableButtons();
+      }, 1600);
     }
   }
 
