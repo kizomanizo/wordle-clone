@@ -266,7 +266,8 @@
       <button class="circle" onclick="resetGame()">RESET</button>
       <input id="delete-button" class="button delete" type="submit" onclick="deleteLastLetter()" value="Delete" />
     </div>
-
+    <!-- Hidden input for calling focus and activating keyboard on mobiles -->
+    <input type="text" id="dummyInput" style="opacity:0; position:absolute; left:-9999px;" />
     <!-- Tries Counter and Stats Table -->
     <div id="tries-container" style="margin-top: 40px; text-align: center;">
       <div id="tries-display" style="font-size: 2.5rem; font-weight: bold; margin-bottom: 10px; color: #316911;">
@@ -292,6 +293,8 @@
 
 </body>
 <script>
+  document.getElementById("dummyInput").focus();
+
   // Line 1 Squares
   const squareOne = document.getElementById('square-1');
   const squareTwo = document.getElementById('square-2');
